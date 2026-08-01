@@ -157,10 +157,11 @@ export default function DragonBloomExperience() {
     <div className={`mobile-menu ${menu ? "open" : ""}`}>{navItems.map(([label,id], i) => <a style={{ "--i": i } as React.CSSProperties} key={id} href={`#${id}`} onClick={() => setMenu(false)}>{label}<ArrowRight /></a>)}</div>
 
     <section id="home" className="hero">
+      <div className="hero-environment" aria-hidden="true" />
       <div className="hero-scene" aria-hidden="true">{webgl ? <DragonScene exploded={exploded} reducedMotion={reduce3d} scrollProgress={scroll} activeHotspot={activeHotspot} onHotspot={setActiveHotspot} /> : <SceneFallback />}</div>
       <div className="hero-grain" />
       <div className="hero-copy">
-        <span className="eyebrow"><i /> GROWN WITH ATTENTION · HARVESTED WITH CARE</span>
+        <span className="eyebrow"><i /> DRAGONBLOOM FARMS</span>
         <h1>Freshness<br />You Can <em>Experience</em></h1>
         <p>Premium dragon fruit, carefully grown and harvested at peak freshness for homes and businesses.</p>
         <div className="hero-buttons"><button className="primary-btn" onClick={explore}>Explore the Fruit <ArrowDown size={18} /></button><MagneticLink href="#contact" className="secondary-btn">Order Fresh</MagneticLink><MagneticLink href="#wholesale" className="text-btn">Wholesale Supply <ArrowRight size={17} /></MagneticLink></div>

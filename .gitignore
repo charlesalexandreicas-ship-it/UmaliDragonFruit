@@ -42,3 +42,4 @@ next-env.d.ts
 /work/
 *.tsbuildinfo
 devserver*.log
+heroqa*.log
