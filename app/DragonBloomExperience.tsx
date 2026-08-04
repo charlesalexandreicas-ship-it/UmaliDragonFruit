@@ -41,31 +41,44 @@ function InquiryForm() {
 
 export default function DragonBloomExperience() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [beat, setBeat] = useState(0);
   const storyRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
-    let raf = 0;
+    let measureRaf = 0;
+    let scrubRaf = 0;
+    let targetTime = 0;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const scrub = () => {
+      scrubRaf = 0;
+      const video = videoRef.current;
+      if (reduced || !video?.duration || !Number.isFinite(video.duration)) return;
+      const delta = targetTime - video.currentTime;
+      if (Math.abs(delta) < .025) {
+        video.currentTime = targetTime;
+        return;
+      }
+      video.currentTime += delta * .3;
+      scrubRaf = requestAnimationFrame(scrub);
+    };
     const update = () => {
-      raf = 0;
+      measureRaf = 0;
       const section = storyRef.current; if (!section) return;
       const rect = section.getBoundingClientRect();
       const distance = Math.max(1, section.offsetHeight - window.innerHeight);
       const next = Math.min(1, Math.max(0, -rect.top / distance));
-      setProgress(next);
+      setBeat(Math.min(storyBeats.length - 1, Math.floor(next * storyBeats.length)));
       const video = videoRef.current;
       if (!reduced && video?.duration && Number.isFinite(video.duration)) {
-        const target = Math.min(video.duration - .04, next * video.duration);
-        if (Math.abs(video.currentTime - target) > .04) video.currentTime = target;
+        targetTime = Math.min(video.duration - .04, next * video.duration);
+        if (!scrubRaf) scrubRaf = requestAnimationFrame(scrub);
       }
     };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    const onScroll = () => { if (!measureRaf) measureRaf = requestAnimationFrame(update); };
     const video = videoRef.current;
     update(); window.addEventListener("scroll", onScroll, { passive: true }); window.addEventListener("resize", onScroll); video?.addEventListener("loadedmetadata", update);
-    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); video?.removeEventListener("loadedmetadata", update); if (raf) cancelAnimationFrame(raf); };
+    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); video?.removeEventListener("loadedmetadata", update); if (measureRaf) cancelAnimationFrame(measureRaf); if (scrubRaf) cancelAnimationFrame(scrubRaf); };
   }, []);
-  const beat = Math.min(storyBeats.length - 1, Math.floor(progress * storyBeats.length));
   return <main>
     <a href="#farm" className="skip-link">Skip to farm story</a>
     <header className="site-header">
@@ -77,7 +90,7 @@ export default function DragonBloomExperience() {
     <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>{nav.map(([label, id]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}<ArrowRight /></a>)}</div>
 
     <section id="top" className="film-story" ref={storyRef}><div className="film-sticky">
-      <video ref={videoRef} className="story-video" muted playsInline preload="auto" poster="/harvest.jpg" aria-label="Scroll-controlled cinematic dragon fruit product sequence"><source src="/dragon-fruit-scroll.mp4" type="video/mp4" /></video>
+      <video ref={videoRef} className="story-video" muted playsInline preload="auto" poster="/dragon-fruit-poster.jpg" aria-label="Scroll-controlled cinematic dragon fruit product sequence"><source src="/dragon-fruit-scrub.mp4" type="video/mp4" /></video>
       <div className="film-shade" />
       <div className="film-copy" key={beat}><span className="story-kicker"><i /> {storyBeats[beat].step} / {storyBeats[beat].label}</span><h1>{storyBeats[beat].title}</h1><p>{storyBeats[beat].copy}</p>{beat === 3 && <a href="#contact" className="hero-action">Ask about harvest <ArrowRight size={18} /></a>}</div>
       <div className="story-progress" aria-hidden="true">{storyBeats.map((item, index) => <span key={item.step} className={index === beat ? "active" : index < beat ? "passed" : ""}><i />{item.step}</span>)}</div>
