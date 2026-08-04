@@ -1,43 +1,16 @@
 "use client";
 
-import { ArrowDown, ArrowRight, Check, Leaf, Mail, MapPin, Menu, MessageCircle, Phone, Play, Send, Sparkles, X } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowRight, Leaf, Mail, MapPin, Menu, MessageCircle, Phone, Play, Sparkles, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const nav = [["Our farm", "farm"], ["Harvest", "harvest"], ["Gallery", "gallery"], ["Contact", "contact"]];
+const facebookUrl = "https://www.facebook.com/chefsMDFF";
 const storyBeats = [
   { step: "01", label: "Meet the fruit", title: "Freshness begins before the first slice.", copy: "Scroll to move through the story." },
   { step: "02", label: "See inside", title: "Vivid. Fresh-cut. Naturally striking.", copy: "Dragon fruit made to be seen—and shared." },
   { step: "03", label: "Imagine the taste", title: "From harvest crate to your table.", copy: "Simple, refreshing, and ready for a new ritual." },
-  { step: "04", label: "Start an inquiry", title: "Taste dragon fruit at its freshest.", copy: "Ask what is in season at Umali Family Dragon Fruit Farm." },
+  { step: "04", label: "Visit Facebook", title: "Taste dragon fruit at its freshest.", copy: "Message Umali Family Dragon Fruit Farm for the latest harvest." },
 ];
-
-function InquiryForm() {
-  const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
-  const startedAt = useRef(Date.now());
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    setState("loading"); setMessage("");
-    try {
-      const response = await fetch("/api/inquiries", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...Object.fromEntries(data.entries()), inquiryType: "harvest", consent: data.get("consent") === "on", startedAt: startedAt.current }) });
-      const result = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(result.error || "Your inquiry could not be sent.");
-      form.reset(); startedAt.current = Date.now(); setState("success"); setMessage("Thank you. Your harvest inquiry has been received.");
-    } catch (error) { setState("error"); setMessage(error instanceof Error ? error.message : "Your inquiry could not be sent."); }
-  }
-  return <form className="inquiry-form" onSubmit={submit}>
-    <div className="honey" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
-    <div className="field-pair"><label>Full name *<input name="name" required autoComplete="name" /></label><label>Email address *<input name="email" type="email" required autoComplete="email" /></label></div>
-    <div className="field-pair"><label>Phone number<input name="phone" type="tel" autoComplete="tel" /></label><label>Location<input name="location" autoComplete="address-level2" placeholder="Town / City" /></label></div>
-    <div className="field-pair"><label>What are you interested in?<select name="product" defaultValue="Fresh dragon fruit"><option>Fresh dragon fruit</option><option>Seasonal availability</option><option>Bulk or business order</option><option>Farm visit inquiry</option></select></label><label>Estimated quantity<input name="quantity" placeholder="e.g. 5 kg or 2 crates" /></label></div>
-    <label>Message<textarea name="message" rows={4} placeholder="Tell us what you need and when you need it." /></label>
-    <label className="consent"><input name="consent" type="checkbox" required /><span>I consent to the farm using these details to respond to my inquiry. *</span></label>
-    <button className="submit-button" disabled={state === "loading"}>{state === "loading" ? "Sending…" : <>Send harvest inquiry <Send size={17} /></>}</button>
-    {message && <p className={`form-message ${state}`} role="status">{state === "success" && <Check size={17} />}{message}</p>}
-  </form>;
-}
 
 export default function DragonBloomExperience() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -70,7 +43,7 @@ export default function DragonBloomExperience() {
     <header className="site-header">
       <a href="#top" className="brand" aria-label="Umali Family Dragon Fruit Farm home"><img src="/umali-logo.jpg" alt="Umali Family Dragon Fruit Farm logo" width="50" height="50" /><span>UMALI FAMILY<small>DRAGON FRUIT FARM</small></span></a>
       <nav className="desktop-nav" aria-label="Primary navigation">{nav.map(([label, id]) => <a key={id} href={`#${id}`}>{label}</a>)}</nav>
-      <a className="header-cta" href="#contact">Ask about harvest <ArrowRight size={15} /></a>
+      <a className="header-cta" href={facebookUrl} target="_blank" rel="noreferrer">Visit Facebook <ArrowRight size={15} /></a>
       <button className="menu-button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
     </header>
     <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>{nav.map(([label, id]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}<ArrowRight /></a>)}</div>
@@ -78,7 +51,7 @@ export default function DragonBloomExperience() {
     <section id="top" className="film-story" ref={storyRef}><div className="film-sticky">
       <video ref={videoRef} className="story-video" muted playsInline preload="auto" poster="/dragon-fruit-poster.jpg" aria-label="Scroll-controlled cinematic dragon fruit product sequence"><source src="/dragon-fruit-scroll.mp4" type="video/mp4" /></video>
       <div className="film-shade" />
-      <div className="film-copy" key={beat}><span className="story-kicker"><i /> {storyBeats[beat].step} / {storyBeats[beat].label}</span><h1>{storyBeats[beat].title}</h1><p>{storyBeats[beat].copy}</p>{beat === 3 && <a href="#contact" className="hero-action">Ask about harvest <ArrowRight size={18} /></a>}</div>
+      <div className="film-copy" key={beat}><span className="story-kicker"><i /> {storyBeats[beat].step} / {storyBeats[beat].label}</span><h1>{storyBeats[beat].title}</h1><p>{storyBeats[beat].copy}</p>{beat === 3 && <a href={facebookUrl} target="_blank" rel="noreferrer" className="hero-action">Message us on Facebook <ArrowRight size={18} /></a>}</div>
       <div className="story-progress" aria-hidden="true">{storyBeats.map((item, index) => <span key={item.step} className={index === beat ? "active" : index < beat ? "passed" : ""}><i />{item.step}</span>)}</div>
       <a className="scroll-cue" href="#farm"><ArrowDown size={16} /> Scroll to explore</a>
     </div></section>
@@ -92,7 +65,7 @@ export default function DragonBloomExperience() {
       ["01", "Fresh fruit", "Ask about current dragon fruit availability and the formats ready for home or business orders."],
       ["02", "Seasonal updates", "Harvest timing changes with the growing cycle. A quick inquiry gets you the freshest update."],
       ["03", "Farm connection", "Learn the story behind the fruit or ask whether a farm visit can be arranged."],
-    ].map(([number, title, copy]) => <article key={number}><span>{number}</span><Sparkles size={24} /><h3>{title}</h3><p>{copy}</p><a href="#contact">Start an inquiry <ArrowRight size={15} /></a></article>)}</div></section>
+    ].map(([number, title, copy]) => <article key={number}><span>{number}</span><Sparkles size={24} /><h3>{title}</h3><p>{copy}</p><a href={facebookUrl} target="_blank" rel="noreferrer">Visit our Facebook page <ArrowRight size={15} /></a></article>)}</div></section>
 
     <section id="gallery" className="gallery-section section-shell">
       <div className="gallery-heading"><div><span className="eyebrow">FROM FARM TO FRAME</span><h2>The real harvest does the storytelling.</h2></div><p>Authentic photography keeps the experience warm and grounded while the commercial adds a more cinematic product moment.</p></div>
@@ -100,11 +73,11 @@ export default function DragonBloomExperience() {
     </section>
 
     <section id="contact" className="contact-section">
-      <div className="contact-copy"><span className="eyebrow light">READY WHEN THE HARVEST IS</span><h2>Ask what’s<br /><em>fresh today.</em></h2><p>Share what you need and where you are. The farm can follow up with current availability, suitable quantities, and next steps.</p><div className="contact-list"><a href="tel:+639489518925"><Phone size={18} /><span><small>PHONE</small>+63 948 951 8925</span></a><a href="mailto:marchefren@gmail.com"><Mail size={18} /><span><small>EMAIL</small>marchefren@gmail.com</span></a><div><MapPin size={18} /><span><small>FARM</small>GRS, Ragay, Camarines Sur</span></div></div></div>
-      <div className="form-card"><div className="form-heading"><span>HARVEST DESK</span><h3>Send an inquiry</h3><p>This is an inquiry, not a confirmed order. Availability and pricing may change seasonally.</p></div><InquiryForm /></div>
+      <div className="contact-copy"><span className="eyebrow light">READY WHEN THE HARVEST IS</span><h2>Ask what’s<br /><em>fresh today.</em></h2><p>For current availability, seasonal updates, orders, and farm visit questions, connect with Umali Family Dragon Fruit Farm directly on Facebook.</p><div className="contact-list"><a href="tel:+639489518925"><Phone size={18} /><span><small>PHONE</small>+63 948 951 8925</span></a><a href="mailto:marchefren@gmail.com"><Mail size={18} /><span><small>EMAIL</small>marchefren@gmail.com</span></a><div><MapPin size={18} /><span><small>FARM</small>GRS, Ragay, Camarines Sur</span></div></div></div>
+      <div className="facebook-card"><MessageCircle size={34} /><span>UMALI FAMILY DRAGON FRUIT FARM</span><h3>See the latest harvest on Facebook.</h3><p>Open the farm’s official page for fresh updates, photos, availability, and direct messaging.</p><a href={facebookUrl} target="_blank" rel="noreferrer">Open Facebook page <ArrowRight size={18} /></a></div>
     </section>
 
-    <footer><div className="footer-brand"><img src="/umali-logo.jpg" alt="Umali Family Dragon Fruit Farm" width="62" height="62" /><span>UMALI FAMILY<small>DRAGON FRUIT FARM</small></span></div><p>Fresh dragon fruit, a real family story, and a simple way to connect with the farm.</p><div className="footer-links">{nav.map(([label, id]) => <a key={id} href={`#${id}`}>{label}</a>)}<a href="mailto:marchefren@gmail.com"><Mail size={14} /> Connect</a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Umali Family Dragon Fruit Farm</span><a href="#top">Back to top ↑</a></div></footer>
-    <a className="floating-contact" href="#contact"><MessageCircle size={20} /><span>Ask about harvest</span></a>
+    <footer><div className="footer-brand"><img src="/umali-logo.jpg" alt="Umali Family Dragon Fruit Farm" width="62" height="62" /><span>UMALI FAMILY<small>DRAGON FRUIT FARM</small></span></div><p>Fresh dragon fruit, a real family story, and a simple way to connect with the farm.</p><div className="footer-links">{nav.map(([label, id]) => <a key={id} href={`#${id}`}>{label}</a>)}<a href={facebookUrl} target="_blank" rel="noreferrer"><MessageCircle size={14} /> Facebook</a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Umali Family Dragon Fruit Farm</span><a href="#top">Back to top ↑</a></div></footer>
+    <a className="floating-contact" href={facebookUrl} target="_blank" rel="noreferrer"><MessageCircle size={20} /><span>Message on Facebook</span></a>
   </main>;
 }
