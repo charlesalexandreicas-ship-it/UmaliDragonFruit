@@ -6,7 +6,7 @@ const manrope = Manrope({ variable: "--font-manrope", subsets: ["latin"] });
 const jakarta = Plus_Jakarta_Sans({ variable: "--font-jakarta", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://umali-dragon-fruit-farm.pages.dev"),
+  metadataBase: new URL("https://umali-dragon-fruit-farm.vercel.app"),
   title: "Umali Family Dragon Fruit Farm | Fresh from Ragay",
   description: "Explore the harvest and meet Umali Family Dragon Fruit Farm in Ragay, Camarines Sur.",
   icons: { icon: "/umali-logo.jpg", shortcut: "/umali-logo.jpg" },
