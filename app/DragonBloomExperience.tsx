@@ -32,6 +32,8 @@ const chapters = [
   { number: "03", label: "On its way", title: "Ready to share.", detail: "Ask the farm directly about the latest harvest." },
 ];
 const harvestSlides = ["Grown with care", "Fresh from Ragay", "From our family farm"];
+const mobileFrameCount = 48;
+const mobileFramePath = (frame: number) => `/film-frames/frame-${String(frame).padStart(3, "0")}.webp`;
 
 function HarvestCarousel() {
   const [active, setActive] = useState(0);
@@ -64,6 +66,7 @@ function HarvestCarousel() {
 function ScrollFilm() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const preloadedFrames = useRef(new Set<number>());
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -76,7 +79,7 @@ function ScrollFilm() {
       const next = Math.max(0, Math.min(1, -section.getBoundingClientRect().top / travel));
       setProgress((previous) => Math.abs(previous - next) > 0.003 ? next : previous);
       const video = videoRef.current;
-      if (!video || !Number.isFinite(video.duration) || !video.duration) return;
+      if (window.matchMedia("(max-width: 700px)").matches || !video || !Number.isFinite(video.duration) || !video.duration) return;
       const target = Math.min(video.duration - 0.05, next * video.duration);
       if (Math.abs(video.currentTime - target) > 0.03) video.currentTime = target;
     };
@@ -96,14 +99,27 @@ function ScrollFilm() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!window.matchMedia("(max-width: 700px)").matches) return;
+    const frame = Math.min(mobileFrameCount, Math.floor(progress * (mobileFrameCount - 1)) + 1);
+    for (let next = frame; next <= Math.min(mobileFrameCount, frame + 10); next++) {
+      if (preloadedFrames.current.has(next)) continue;
+      const image = new window.Image();
+      image.src = mobileFramePath(next);
+      preloadedFrames.current.add(next);
+    }
+  }, [progress]);
+
   const chapter = progress < 0.32 ? 0 : progress < 0.63 ? 1 : 2;
   const showLogo = progress > 0.91;
+  const mobileFrame = Math.min(mobileFrameCount, Math.floor(progress * (mobileFrameCount - 1)) + 1);
   return (
     <section className="film-story" id="top" ref={sectionRef} aria-label="From the farm to the harvest">
       <div className="film-sticky">
-        <video ref={videoRef} className="story-video" muted playsInline preload="auto" poster="/umali-journey-poster.jpg" aria-hidden="true">
+        <video ref={videoRef} className="story-video" muted playsInline preload="metadata" poster="/umali-journey-poster.jpg" aria-hidden="true">
           <source src="/umali-farm-journey.mp4" type="video/mp4" />
         </video>
+        <Image className="story-frames" src={mobileFramePath(mobileFrame)} alt="" fill sizes="100vw" unoptimized priority aria-hidden="true" />
         <div className="film-shade" aria-hidden="true" />
         <div className={`film-message ${showLogo ? "is-hidden" : ""}`} key={chapter}>
           <span className="overline overline-light"><span className="overline-rule" /> UMALI FAMILY DRAGON FRUIT FARM</span>

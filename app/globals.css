@@ -15,6 +15,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #f4bb51;outline-offset:4p
 .mobile-nav{display:none}
 .film-story{height:310vh;position:relative;background:#0a2419}.film-sticky{height:100svh;position:sticky;top:0;overflow:hidden;background:#0a2419}
 .story-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.story-frames{display:none;object-fit:cover;object-position:55% center;background:#0a2419 url("/umali-journey-poster.jpg") center/cover no-repeat}
 .film-shade{position:absolute;inset:0;background:linear-gradient(90deg,#062318cf 0%,#0623188c 35%,transparent 76%),linear-gradient(0deg,#06231882,transparent 38%)}
 .film-message{position:absolute;z-index:2;left:max(7vw,45px);top:50%;transform:translateY(-50%);width:min(620px,52vw);color:#fff;animation:message-in .5s ease both;transition:opacity .35s}
 .film-message.is-hidden{opacity:0;pointer-events:none;animation:none}
@@ -52,3 +53,4 @@ button:focus-visible,a:focus-visible{outline:3px solid #f4bb51;outline-offset:4p
 @media(max-width:700px){.film-logo-reveal img{width:min(70vw,300px)}.harvest-carousel{min-height:108px;padding:17px 18px;grid-template-columns:40px 1fr 40px;gap:7px}.harvest-carousel>button{width:38px;height:38px}.harvest-carousel-copy{display:flex;flex-direction:column;gap:6px}.harvest-carousel-copy>span{font-size:clamp(24px,7vw,38px)}.contact-mark{width:100%;flex-direction:column;align-items:center;gap:0}.contact-mark>a img{width:150px;height:150px}.contact-mark .contact-details{width:100%;max-width:320px;margin-top:25px;font-size:14px}}
 @media(max-width:1000px){.press-layout{grid-template-columns:1fr;gap:48px}.press-intro p{max-width:600px}}
 @media(max-width:700px){.press-section{padding:92px 0}.press-layout{gap:36px}.press-intro h2{font-size:clamp(54px,12vw,72px)}.press-intro p{font-size:15px}.press-feature h3{font-size:clamp(29px,8vw,39px)}.press-feature-top{align-items:flex-start;gap:10px;font-size:9px}.press-feature-top span:last-child{white-space:nowrap}}
+@media(max-width:700px){.film-story{height:420svh}.story-video{display:none}.story-frames{display:block}}
