@@ -8,15 +8,15 @@ const jakarta = Plus_Jakarta_Sans({ variable: "--font-jakarta", subsets: ["latin
 export const metadata: Metadata = {
   metadataBase: new URL("https://umali-dragon-fruit-farm.pages.dev"),
   title: "Umali Family Dragon Fruit Farm | Fresh from Ragay",
-  description: "Fresh, seasonal dragon fruit from a family farm in Ragay, Camarines Sur.",
+  description: "Explore the harvest and meet Umali Family Dragon Fruit Farm in Ragay, Camarines Sur.",
   icons: { icon: "/umali-logo.jpg", shortcut: "/umali-logo.jpg" },
   openGraph: {
     title: "Umali Family Dragon Fruit Farm",
-    description: "Taste dragon fruit at its freshest.",
+    description: "Explore the harvest and meet the family farm in Ragay, Camarines Sur.",
     type: "website",
-    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "Umali Family Dragon Fruit Farm — Taste dragon fruit at its freshest" }],
+    images: [{ url: "/umali-journey-poster.jpg", width: 1280, height: 720, alt: "Dragon fruit on the vine at morning light" }],
   },
-  twitter: { card: "summary_large_image", title: "Umali Family Dragon Fruit Farm", description: "Taste dragon fruit at its freshest.", images: ["/og.png"] },
+  twitter: { card: "summary_large_image", title: "Umali Family Dragon Fruit Farm", description: "Explore the harvest in Ragay, Camarines Sur.", images: ["/umali-journey-poster.jpg"] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -3,7 +3,7 @@ import DragonBloomExperience from "./DragonBloomExperience";
 
 export const metadata: Metadata = {
   title: "Umali Family Dragon Fruit Farm | Fresh from Ragay",
-  description: "Meet Umali Family Dragon Fruit Farm and ask about fresh, seasonal dragon fruit from Ragay, Camarines Sur.",
+  description: "Explore the harvest and meet Umali Family Dragon Fruit Farm in Ragay, Camarines Sur.",
 };
 
 export default function Home() {
